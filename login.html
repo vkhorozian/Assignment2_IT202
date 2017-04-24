@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+    <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+<form  method="post" action = "login.php" >
+    <br>
+    User    <input type=text name="user" id="user" required="required" placeholder="enter user name"><br>
+    Password <input type=password name="password" id="password" required="required" autocomplete="off" placeholder="enter password"><br>
+    <br>
+
+    <ul> Action:
+        <li>Admin <input type="radio" name ="type" value='admin'></li>
+        <li>User <input type="radio" name="type" value='user'></li>
+    </ul>
+
+
+    <br>
+    <input type = submit>
+
+
+</form>
+</body>
+</html>
