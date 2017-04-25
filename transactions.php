@@ -2,6 +2,7 @@
 session_start();
 echo $_SESSION['current_balance'];
 echo $_SESSION['user_name'];
+
 include ("function.php");
 
 /**

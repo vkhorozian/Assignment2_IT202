@@ -2,6 +2,7 @@
 session_start();
 //includes my database credentials and extends the funcitons file so they can be used
 include("account.php");
+
 include("function.php");
 
     //TODO: You should really have a unique id in this for it to be secure
@@ -17,24 +18,50 @@ $password = filter_input(INPUT_POST, 'password'); echo "the password is " .$pass
 $autority_level = filter_input(INPUT_POST, 'type'); echo "you are a/an " .$autority_level.'<br>';
 
 
-$_SESSION["user_name"] = $user_name;
-$_SESSION["password"] = $password;
+/*
+    ($dbh = mysql_connect($hostname, $user_name, $password))
+            or die ("unable to connect to DB");
+    mysql_select_db($project);
+print "success";
+
+    $select = "SELECT * FROM accounts WHERE user='$user_name' and pass='$password'";
+print "<br> s = $s <br>";
+
+    ($query = mysql_query($select)) or die (mysql_error());
+
+    if(mysql_num_rows($query) > 0)
+    {
+        $_SESSION["Logged"] = true;
+    }else{
+        $message = "cant get session vars";
+        $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html";
+        redirect($message,$url);
+
+    while($row = mysql_fetch_array($query))
+    {
+        $user = $row["user"];
+        $pass = $row["pass"];
+        $current_balance = $row["current_balance"];
+        $email = $row["email"];
+
+        $_SESSION["user"] = $user;
+        $_SESSION["pass"] = $pass;
+        $_SESSION["current_balance"] = $current_balance;
+        $_SESSION["email"] = $email;
+        print "<br> User is: $user <br> Pass is: $pass <br>Current balance is $: $current_balance  <br>";
+    }
+}
+*/
+
+
+
+//$_SESSION["user_name"] = $user_name;
+//$_SESSION["password"] = $password;
 
 /*if($autority_level != 'admin'){
     $password = sha1($password);
 }*/
-
-if($autority_level == "admin")
-    {
-        admin($user_name,$password);
-    }elseif($autority_level == "user"){
-        user($user_name,$password);
-    }else{
-        $message = "you must select a type of user";
-        $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html";
-        redirect($message,$url);
-}
-//if($action == 'list_users'){}
+/*
 
 $array_of_user_data = get_users_data($user_name,$password);
 
@@ -51,10 +78,59 @@ echo $_SESSION['password'] = $pass;
 echo $_SESSION['current_balance'] = $current_balance;
 echo $_SESSION['email'] = $email;
 
+*/
+
+if($autority_level == "admin")
+    {
+        admin($user_name,$password);
+    }elseif($autority_level == "user"){
+        user($user_name,$password);
+    }else{
+        $message = "you must select a type of user";
+        $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html";
+        redirect($message,$url);
+}
+//if($action == 'list_users'){}
+
+/*
+
+
+($dbh = mysql_connect($hostname, $user_name, $password))
+        or die ("unable to connect to DB");
+mysql_select_db($project);
+print "success";
+
+$select = "SELECT * FROM accounts WHERE user='$user_name' and pass='$password'";
+print "<br> s = $s <br>";
+
+($query = mysql_query($select)) or die (mysql_error());
+
+if(mysql_num_rows($query) > 0)
+    {
+        $_SESSION["Logged"] = true;
+    }else{
+    $message = "cant get session vars";
+    $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html";
+    redirect($message,$url);
+
+    while($row = mysql_fetch_array($query))
+        {
+            $user = $row["user"];
+            $pass = $row["pass"];
+            $current_balance = $row["current_balance"];
+            $email = $row["email"];
+
+            $_SESSION["user"] = $user;
+            $_SESSION["pass"] = $pass;
+            $_SESSION["current_balance"] = $current_balance;
+            $_SESSION["email"] = $email;
+            print "<br> User is: $user <br> Pass is: $pass <br>Current balance is $: $current_balance  <br>";
+        }
+}
 
 
 
-
+/*
 
 
 

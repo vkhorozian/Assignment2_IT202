@@ -194,6 +194,6 @@ function set_session_var($user,$pass)
         $statement->execute();
         $discovered = $statement->fetchAll();
         $statement->closeCursor();
-       // $discovered;
+        // $discovered;
     }
 
