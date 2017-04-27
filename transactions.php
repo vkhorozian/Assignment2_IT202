@@ -15,7 +15,7 @@ include ("function.php");
 $type = filter_input(INPUT_POST, 'type');
 $amount = filter_input(INPUT_POST, 'amount');
 
-if($type == 'deposit')
+if($type == 'D')
     {
         deposit($amount,$type);
     }
@@ -25,6 +25,17 @@ if($type == 'deposit')
     }
 
 
+$type = $_SESSION['autority_level'];
+
+if (isset($email_checked))
+{
+    email($type,$user_name,$message);
+}
+
+$message = "User. $user_name . was removed";
+$url = "https://web.njit.edu/~vjk5/download/assignment2/admin.php";
+
+redirect($message,$url);
 
 
 

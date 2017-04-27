@@ -1,0 +1,63 @@
+<!DOCTYPE html5>
+
+<script>
+/*
+    function f()
+    {
+        var user = document.getElementById("user_name");
+        var pass = document.getElementById("password");
+        var email = document.getElementById("email");
+        var fullname = document.getElementById("fullname");
+        var addr = document.getElementById("address");
+        var ib = document.getElementById("initial_balance");
+        var cb = document.getElementById("current_balance");
+
+        if (!user.value.trim() || !(pass.value).trim() || !(email.value).trim()|| !(fullname.value).trim()|| !(addr.value).trim()|| !(ib.value).trim()|| !(cb.value).trim())
+        {
+            if (!user.value.trim()){
+                alert("Please enter you're User Name");
+            }else if(!pass.value.trim()){
+                alert("please enter you're Password");
+            }else if(!email.value.trim()){
+                alert("please enter you're Email");
+            }else if(!fullname.value.trim()){
+                alert("please enter you're Fullname");
+            }else if(!addr.value.trim()){
+                alert("please enter you're Address");
+            }else if(!ib.value.trim()){
+                alert("please enter the Initial Balance");
+            }else if(!cb.value.trim()){
+                alert("please enter the Current Balance");
+            }
+            return false;
+        }
+    }
+*/
+</script>
+<html>
+<head><title>Add User</title><link rel="stylesheet" type="text/css" href="main.css"></head>
+    <body>
+        <main>
+            <form method="post" action = "add_user.php" >
+                <br>
+                <br>
+                <fieldset>
+                    <ul> <legend>Action:</legend>
+                        <center>User Name:   <input type =text name ="user_name" id ="user_name" autocomplete ="off" placeholder="enter user name"  ></center><br>
+                        <center>Password:   <input type =text name ="password" id ="password" autocomplete ="off" placeholder="enter user's password"  ></center><br>
+                        <center>Email:   <input type =text name ="email" id ="email" autocomplete ="off" placeholder="enter user's email"  ></center><br>
+                        <center>Fullname:   <input type =text name ="fullname" id ="fullname" autocomplete ="off" placeholder="enter user's fullname"  ></center><br>
+                        <center>Address:   <input type =text name ="address" id ="address" autocomplete ="off" placeholder="enter user's address"  ></center><br>
+                        <center>Initial Balance:   <input type =text name ="initial_balance" id ="initial_balance" autocomplete ="off" placeholder="enter user's inital balance"  ></center><br>
+                        <center>Current Balance:   <input type =text name ="current_balance" id ="current_balance" autocomplete ="off" placeholder="enter user's current balance"  ></center><br>
+
+                    </ul>
+                </fieldset>
+                Email results </label> <input type = "checkbox" id = "cbox" name = "mail"> <br>
+
+                <br>
+                <input type = submit onclick="f()">
+            </form>
+        </main>
+    </body>
+</html>

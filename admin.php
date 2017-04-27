@@ -12,15 +12,12 @@ $users = admin_get_users_data();
 $transactions = admin_get_trans_data();
 
 ?>
-<!DOCTYPE html>
+<!DOCTYPE html5>
 <html>
-<head><title>Admin Homepage</title><link rel="stylesheet" type="text/css" href="main.css"</head>
+<head><title>Admin Homepage</title><link rel="stylesheet" type="text/css" href="main.css"></head>
 <body>
     <main>
         <h1>View Details of Acounts</h1>
-        <aside>
-            <h2>Categories</h2>
-        </aside>
         <section>
             <h2>accounts</h2>
             <table>
@@ -64,14 +61,28 @@ $transactions = admin_get_trans_data();
             <?php endforeach; ?>
         </table>
         </section>
+        <br>
 
         <form  method="post" action = "login.php" >
-            <br>
-            <br>
             <h4>This will redirect you to login page</h4>
             <input type="submit">
 
         </form>
+
+        <form method="post" action="add_user.html" >
+                <h4>Add User</h4>
+                <input type="submit">
+        </form>
+
+
+        <form method="post" action = "delete_user.html">
+                <h4>Delete User</h4>
+                <input type="submit">
+        </form>
+
+
+
+
     </main>
 </body>
 </html>

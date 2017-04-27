@@ -1,0 +1,42 @@
+<!DOCTYPE html5>
+
+
+<script>
+    function f()
+    {
+        var user = document.getElementById("user_name");
+
+        if (!user.value.trim())
+        {
+            alert("Please enter user name");
+            return false;
+        }
+    }
+
+</script>
+<html>
+    <head>
+        <title>
+            Delete User
+        </title>
+            <link rel="stylesheet" type="text/css" href="main.css">
+    </head>
+        <body>
+            <main>
+                <form method="post" action = "delete_user.php" >
+                    <br>
+                    <br>
+                    <fieldset>
+                        <ul> <legend>Enter User Name That You Want To Remove:</legend>
+                            <center>User's Name:   <input type =text name ="user_name" id ="user_name" autocomplete ="off" placeholder="enter user name"  ></center><br>
+
+                        </ul>
+                    </fieldset>
+                    Email results </label> <input type = "checkbox" id = "cbox" name = "mail"> <br>
+
+                    <br>
+                    <input type = submit>
+                </form>
+            </main>
+        </body>
+</html>

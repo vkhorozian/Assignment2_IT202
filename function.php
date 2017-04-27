@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once ("account.php");
 require_once ("database.php");
 /**
@@ -12,33 +11,13 @@ require_once ("database.php");
 function redirect ($message, $url)
     {
         echo $message;
-        header("refresh:3 ; url = $url");
+        header("refresh: 5 ; url = $url");
         exit();
     }
-function get_case(&$name,&$pass,&$type)
+
+function admin($name,$pass,$autority_level)
     {
-        if ($type != "user" && $type != "admin")
-        {
-            $message = "You must select an account type.";
-            $url = "https://web.njit.edu/`vjk5/download/assignment2/login.html";
-            redirect($message,$url);
-        }
-        elseif ($name == "" || $pass == "")
-        {
-            $message = "You must enter a username and password.";
-            $url = "https://web.njit.edu/`vjk5/download/assignment2/login.html";
-            redirect($message,$url);        }
-        // if everything works return the type (withdraw, deposit, or admin)
-        else
-        {
-            $name = mysql_real_escape_string($name);
-            $pass = mysql_real_escape_string($pass);
-            return $type;
-        } return $type;
-    }// cheack this first them go to user
-function admin($name,$pass)
-    {
-        if($name != "admin" and $pass != "007"){
+        if($name != "admin" or $pass != "007" or $autority_level != "admin"){
             $message = "invalid user name or password.";
             $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html";
             redirect($message,$url);
@@ -46,13 +25,14 @@ function admin($name,$pass)
             redirect("sucess","https://web.njit.edu/~vjk5/download/assignment2/admin.php");
         }
     }/// here you pulling in
+
 function user($name,$pass)
     {
         $temp = identify_user($name,$pass);
         if (count($temp) ==  0 )
         {
             // TODO: Redirect to Login
-            redirect($message = "Login sucessful",
+            redirect($message = "Login not sucessful",
                      $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html");
         }else{
             $_SESSION['status'] = "user";  //if they made it this far i can give them gate keeper cradentials
@@ -62,21 +42,23 @@ function user($name,$pass)
                      $url = "https://web.njit.edu/~vjk5/download/assignment2/user.php");
         }
     }
-function gatekeeper($user,$pass)
+
+function add_user($user,$pass,$email,$fullname,$address,$inital_balance,$current_balance)
+{
+    global $db;
+    $query = "INSERT INTO accounts VALUES('$user','$pass','$email','$fullname','$address','$inital_balance','$current_balance')";
+    $statement = $db->prepare($query);
+    $statement->execute();
+    $statement->closeCursor();
+}
+
+function delete_user($user)
     {
-        include("account.php");
-        ($dbh = mysql_connect($hostname, $username, $password)) or die ( "Unable to connect to MySQL database" );
-        mysql_select_db($project);
-
-        $select="SELECT * FROM accounts WHERE user='$user' and pass='$pass'";
-        ($t = mysql_query($select)) or die (mysql_error());
-        // TODO: Redirect to Login
-
-        if(mysql_num_rows($t) == 0){
-            $message = "invalid user name or password, you will now be redirected by the gatekeeper";
-            $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html";
-            redirect($message,$url);
-        }
+        global $db;
+        $query = "DELETE FROM accounts WHERE user = '$user'";
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $statement->closeCursor();
     }
 
 function admin_get_users_data()
@@ -89,6 +71,7 @@ function admin_get_users_data()
         $statement->closeCursor();
         return $users;
     }
+
 function admin_get_trans_data()
     {
         global $db;
@@ -99,6 +82,7 @@ function admin_get_trans_data()
         $statement->closeCursor();
         return $transactions;
     }
+
 function get_users_data($user,$pass)
     {
         global $db;
@@ -110,6 +94,18 @@ function get_users_data($user,$pass)
 
         return $users;
     }
+
+function set_session($array)
+    {
+        $current_balance = $array["current_balance"];
+        $email = $array["email"];
+        $user = $array["user"];
+
+        $_SESSION["current_balance"] = $current_balance;
+        $_SESSION["email"] = $email;
+        $_SESSION["user"] = $user;
+    }
+
 function get_trans_data($user,$pass)
     {
         global $db;
@@ -130,12 +126,8 @@ function withdraw($amount,$type)
         echo ".$user. = user";
         echo "$email. = email";
         global $db;
-        $query = "INSERT INTO transaction VALUES('user','type','amount','date')";
-        $statement = $db->prepare($query);
-        $statement->execute();
-        $statement->closeCursor();
-        if($cb < $amount and $type = 'W'){
-            $message = "not enough money in account www";
+        if($cb < $amount && $type = 'W'){
+            $message = "not enough money in account";
             $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html";
             redirect($message,$url);
         }else{
@@ -147,28 +139,26 @@ function withdraw($amount,$type)
             $statement3 = $db->prepare($query3);
             $statement3->execute();
             $statement3->closeCursor();
-            $message = "you sucessfully withdrew $.$amount.";
+            $message = "you sucessfully withdrew $$amount "; // removed the . $amount .
             $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html";
             redirect($message,$url);
         }
     }
+
 function deposit($amount,$type)
     {
-        $cb = $_SESSION['current_balance'];
-        $user = $_SESSION['user_name'];
+        $user = $_SESSION['user'];
+        print_r($_SESSION);
+        echo $amount;
         global $db;
-        $query = "INSERT INTO transaction VALUES('user','type','amount','date')";
+        $query = "INSERT INTO transaction VALUES('$user','$type','$amount',NOW())";
         $statement = $db->prepare($query);
         $statement->execute();
         $statement->closeCursor();
-        $query2 = "INSERT INTO transaction VALUES('$user','$type','$amount',NOW())";
+        $query2 = "UPDATE accounts SET current_balance = current_balance + '$amount' WHERE user = '$user'";
         $statement2 = $db->prepare($query2);
         $statement2->execute();
         $statement2->closeCursor();
-        $query3 = "UPDATE accounts SET current_balance = current_balance + '$amount' WHERE user = '$user'";
-        $statement3 = $db->prepare($query3);
-        $statement3->execute();
-        $statement3->closeCursor();
         $message = "you sucessfully deposited $.$amount.";
         $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html";
         redirect($message,$url);
@@ -185,6 +175,76 @@ function identify_user($user,$pass)
         $statement->closeCursor();
         return $discovered;
     }
+
+function gatekeeper($user,$pass)
+{
+    include("account.php");
+    ($dbh = mysql_connect($hostname, $username, $password)) or die ( "Unable to connect to MySQL database" );
+    mysql_select_db($project);
+
+    $select="SELECT * FROM accounts WHERE user='$user' and pass='$pass'";
+    ($t = mysql_query($select)) or die (mysql_error());
+    // TODO: Redirect to Login
+
+    if(mysql_num_rows($t) == 0){
+        $message = "invalid user name or password, you will now be redirected by the gatekeeper";
+        $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html";
+        redirect($message,$url);
+    }
+}
+function retrieve_email($user,$type)
+{
+    global $db;
+    if($type == 'admin') //admins default email
+    {
+        return 'vjk5@njit.edu';
+    }
+    elseif($type != 'admin') //users email search
+    {
+        $query = "SELECT email FROM accounts WHERE user = :user";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':user', $user);
+        $statement->execute();
+        $email_addr = $statement->fetchAll();
+        $statement->closeCursor();
+        return $email_addr[0]['email'];
+    }
+}
+function email($type,$user,$message)
+{
+    $to = retrieve_email($user,$type);
+    $subject = "user account and transaction";
+    $message = "$message" . "\n";
+    $headers = 'From: vkhorozian@gmail.com' . "\r\n" .
+        'Reply-To: vkhorozian@gmail.com' . "\r\n" .
+        'X-Mailer: PHP/' . phpversion();
+
+    echo "TO: " . $to . '<br>';
+    echo "SUBJECT: " . $subject . '<br>';
+    echo "MESSAGE: " . $message . '<br>';
+    echo "HEADERS: " . $headers . '<br>';
+
+    mail($to,$subject,$message,$headers);
+
+}
+
+
+
+
+
+
+/*
+function admin($name,$pass,$autority_level)
+{
+    if($name = "admin" and $pass = "007" and $autority_level = "admin"){
+        redirect("sucess","https://web.njit.edu/~vjk5/download/assignment2/admin.php");
+    }else{
+        $message = "invalid user name or password.";
+        $url = "https://web.njit.edu/~vjk5/download/assignment2/login.html";
+        redirect($message,$url);
+    }
+}
+
 function set_session_var($user,$pass)
     {
         session_start();
@@ -196,4 +256,18 @@ function set_session_var($user,$pass)
         $statement->closeCursor();
         // $discovered;
     }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
 
